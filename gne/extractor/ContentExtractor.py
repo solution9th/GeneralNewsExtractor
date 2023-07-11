@@ -25,10 +25,13 @@ class ContentExtractor:
             body = selector.xpath(body_xpath)[0]
         else:
             body = selector.xpath('//body')[0]
+        # 移除 is_visiable 属性不为 true 的节点
         for node in iter_node(body):
             if use_visiable_info:
-                if not node.attrib.get('is_visiable', True):
-                    continue
+                if not node.attrib.get('is_visiable') == "true":
+                    node.getparent().remove(node)
+        for node in iter_node(body):
+            if use_visiable_info:
                 coordinate_json = node.attrib.get('coordinate', '{}')
                 coordinate = json.loads(coordinate_json)
 
